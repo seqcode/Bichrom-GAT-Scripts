@@ -1,7 +1,7 @@
 # [DOCUMETATION IS UNDER DEVELOPMENT]
 
 # Bichrom-GAT
-This is an extension to our earlier work on Bichrom (https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02218-6). We have added Graph Attention Network (GAT) to predict the TF-DNA binding using pre-existing contact matrix data. The GAT is implemented from this papar (https://genome.cshlp.org/content/32/5/930). <br>
+This is an extension to our earlier work on [Bichrom](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02218-6). We have added Graph Attention Network (GAT) to predict the TF-DNA binding using pre-existing contact matrix data. The GAT is implemented from this [papar](https://genome.cshlp.org/content/32/5/930). <br>
 
 ## Installation and Requirements 
 
@@ -13,11 +13,17 @@ cd  Bichrom-GAT-Scripts/code
 ```
 ## Brief Description of Each Script
 
-- **config.py:** This is the configuration file which contains various parameters for data construction & training
-- **construct_data.py:** This script generates training and test set
-- **construct_data.sh:** This script submits job.
-- **predict_chip_seq_track_from_seqnet.py:** 
-
+- **config.py:** This is the configuration file which contains various parameters for data construction & training.
+- **construct_data.py:** Script for generating training and test set.
+- **construct_data.sh:** Script for submiting job to the cluster.
+- **predict_chip_seq_track_from_seqnet.py:** Script for predicting TF bigwig values from a trained seq-net model.
+- **predict_chip_seq_track_from_seqnet.sh:** Script for submiting job to the cluster.
+- **predict_on_external_data.py:** Script for evaluating performance of a trained GAT-net/Bimodal-net model.
+- **seq_and_bimodal_networks_ResNet.py:** Definitions of all models.
+- **train_bichrom.py:** Script for training both seq-net & GAT-net.
+- **train_bichrom.sh:** Script for submiting job to the cluster.
+- **utils.py:** Contains helper function for data construction and training. 
+ 
 ## Usage
 
 ### Step 1 - Collect the following data in any input directory
@@ -124,20 +130,21 @@ Run:
 ### Step 3 - Output 
 construct_data.py will produce following files which includes train, test bed files and other files in the specified output directory.
 
-- **common_data:** Directory containing onehot_seq dictionary & chip-seq hdf5 file 
-- **training_df_seq.bed:** Bed file containing the regions for prediction
-- **training_df_bimodal_bound.bed:**
-- **training_df_bimodal_unbound.bed:**
-- **test_df_internal.bed:**
-- **test_df_external.bed:**
-- **val_df_external.bed:**
-- **stats.txt:**
+- **common_data:** Directory containing onehot_seq dictionary & chip-seq hdf5 file.
+- **training_df_seq.bed:** Bed file containing the regions for training seq-net.
+- **training_df_bimodal_bound.bed:** Bound regions (+ve samples) bed fild for training GAT-net/Bimodal-net.
+- **training_df_bimodal_unbound.bed:** Unbound regions (-ve samples) bed fild for training GAT-net/Bimodal-net.
+- **test_df_internal.bed:** Internal test-set regions bed file.
+- **test_df_external.bed:** External test-est regions bed file.
+- **val_df_external.bed:** Validation regions bed file.
+- **stats.txt:** Number of -ve and -ve samples in bed files.
 - **config.py:** Copy of configuration file
  
 ### Step 4 - Train and Evaluate Bichrom-GAT
 There two networks in this approach:
-1) **Sequence-only Netowrk (seq-net):** This networks is trained first on the sequence data to predict ChIP-seq track. It also serves as the feature generator for the nodes in the contact matrix. The input to seq-next is region of length `config.window_length` (prediction window) which get expanded to both size by half of `config.context_window_length` before training. Then, seq-net is trained on the sequence of size `config.window_length + config.context_window_length`. It predicts the ChIP-seq bigwig values averaged over bins of size 100. E.g. If input size of 400bp and context window size is 10,000bp then input is expanded to both sides by 5000pb. In this case the output prediction size would be 104.
-2) **GAT Network (GAT-net/Bimodal-net):** This network is trained on the contact matrix (adjacency matrix) and features extracted from trained seq-net to predict the binding probability.
+1) **Sequence-only Netowrk (seq-net):** This networks is trained first on the sequence data to predict ChIP-seq track. It also serves as the feature generator for the nodes in the contact matrix. The input to seq-next is the region of length `config.window_length` (prediction window) which gets expanded to both side by half of the `config.context_window_length` before training. Then, seq-net is trained on the sequence of size `config.window_length + config.context_window_length`. This model predicts the ChIP-seq bigwig values averaged over bins of size 100. E.g. If window length is 400bp and context window size is 10,000bp then input is expanded to both sides by 5000pb (final size of input = 10,400bp). In this case the size of the output by seq-net would be 104 (10,400/100).
+2) **GAT Network (GAT-net/Bimodal-net):** This network is trained on the contact matrix (adjacency matrix) and the features extracted from a trained seq-net to predict the binding probability. You will need to add or remove layers depending on the size of `config.window_length` and `config.window_length + config.context_window_length`.
+   
 ```
 Run:
 ./train_bichrom.sh
