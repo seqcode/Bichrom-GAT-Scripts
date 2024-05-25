@@ -5,7 +5,7 @@ This is an extension to our earlier work on [Bichrom](https://genomebiology.biom
 
 ## Installation and Requirements 
 
-Please refer to [bichrom_gat.yaml](https://github.com/seqcode/Bichrom-GAT-Scripts/blob/master/bichrom_gat.yaml)
+Please refer to [bichrom_gat.yaml](https://github.com/seqcode/Bichrom-GAT-Scripts/blob/master/bichrom_gat.yaml) for rquired packages.
 
 Clone and navigate to the Bichrom-GAT-Scripts/code. <br>
 ```
