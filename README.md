@@ -109,10 +109,10 @@ resolution = window_len
 
 ### Step 3 - Construct Input Data
 In order to reduce the training time, we have incorporated few strategies during data construction.
-1) Pre-compute one-hot encoded matrices and store them into a dictionary
-2) Convert TF .bigwig file into HDF5 file
+1) Pre-compute one-hot encoded matrices and store them into a dictionary.
+2) Convert TF .bigwig file into HDF5 file.
 
-To improve the generalization of the GAT model, we construct ubound (-ve) training that is much large than bound (+ve) training set. We try generate enough -ve samples such that every batch will have unique -ve samples (Although this is not alway guaranteed).
+To improve the generalization of the GAT model, we construct ubound (-ve) training that is much large than bound (+ve) training set. We try to generate enough -ve samples such that every batch will have unique -ve samples (although uniqueness is not guaranteed).
 ```
 # Activate conda environment 
 source activate bichrom
@@ -136,8 +136,8 @@ construct_data.py will produce following files which includes train, test bed fi
  
 ### Step 4 - Train and Evaluate Bichrom-GAT
 There two networks in this approach:
-1) **Sequence-only Netowrk (seq-net):** This networks is trained first on the sequence data to predict ChIP-seq track. It also serves as the feature generator for the nodes in the contact matrix. The input to seq-next is region of length `config.window_length` (prediction window) which get expanded to both size by half of `config.context_window_length` before training. Then, seq-net is trained on the sequence of size `config.window_length + config.context_window_length`. It predicts the ChIP-seq bigwig values averaged over bins of size 100. E.g. If input size of 400bp and context window size is 10,000bp then input is expanded to both sides by 5000pb and the out size is 
-2) **GAT Network (GAT-net/Bimodal-net):** This network is trained on the contact matrix and features extracted from trained seq-net to predict the binding probability.
+1) **Sequence-only Netowrk (seq-net):** This networks is trained first on the sequence data to predict ChIP-seq track. It also serves as the feature generator for the nodes in the contact matrix. The input to seq-next is region of length `config.window_length` (prediction window) which get expanded to both size by half of `config.context_window_length` before training. Then, seq-net is trained on the sequence of size `config.window_length + config.context_window_length`. It predicts the ChIP-seq bigwig values averaged over bins of size 100. E.g. If input size of 400bp and context window size is 10,000bp then input is expanded to both sides by 5000pb. In this case the output prediction size would be 104.
+2) **GAT Network (GAT-net/Bimodal-net):** This network is trained on the contact matrix (adjacency matrix) and features extracted from trained seq-net to predict the binding probability.
 ```
 Run:
 ./train_bichrom.sh
