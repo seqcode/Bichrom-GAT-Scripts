@@ -131,7 +131,8 @@ def get_metrics(test_labels, test_probas, out_file, model_name):
     out_file.write("CONFUSION MATRIX:\n{0}\n".format(cm))
     out_file.write(f"Total points = {len(test_labels)}\n")
     out_file.write(f"Value counts True = \n{pd.Series(test_labels.flatten()).astype(int).value_counts().to_frame()}\n")
-    out_file.write(f"Value counts Pred = \n{pd.Series(pred_labels).value_counts().to_frame()}")
+    out_file.write(f"Value counts Pred (at 0.5 cut-off) = \n{pd.Series(pred_labels).value_counts().to_frame()}")
+    out_file.write("\n")
     out_file.write("="*20)
     out_file.write("\n\n")
     return auc_roc, auc_prc

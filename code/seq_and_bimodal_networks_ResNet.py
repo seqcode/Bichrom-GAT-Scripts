@@ -11,6 +11,10 @@ from torchvision.models.feature_extraction import create_feature_extractor
 
 
 class GraphAttention(nn.Module):
+    """
+    Graph attention layer. Implemented from https://github.com/karbalayghareh/GraphReg
+    """
+
     def __init__(self,
                  F,
                  F_, 
@@ -141,27 +145,19 @@ class GraphAttention(nn.Module):
 
 
 class permute(nn.Module):
+    """
+    Custom permutation layer
+    """
+
     def forward(self,x):
         return torch.permute(x, (0, 2, 1))
 
 
-
-class MyExpLayer(nn.Module):
-    def __init__(self):
-        super(MyExpLayer, self).__init__()
-
-    def forward(self, x):
-        return torch.exp(x)
-
-class MyLinearLayer(nn.Module):
-    def __init__(self):
-        super(MyLinearLayer, self).__init__()
-
-    def forward(self, x):
-        return x
-        
-
 class seq_network(nn.Module):
+    """
+    Sequence-only network (seq-net)
+    """
+
     def __init__(self, model_params_dict, chromatin_tracks_path_list, num_layers=34, image_channels=4, num_classes=1, l2_reg=0.01, dropout_rate=0.5):
         super(seq_network, self).__init__()
 
@@ -264,6 +260,10 @@ class seq_network(nn.Module):
 
 
 class GAT_network(nn.Module):
+    """
+    Intermediate Graph attention network
+    """
+
     def __init__(self, model_params_dict):
         super().__init__()
         
@@ -312,6 +312,10 @@ class GAT_network(nn.Module):
         self.batch_norm3 = nn.BatchNorm1d(1)
         self.maxpool3 = nn.MaxPool1d(2)
         
+        """
+        Modify these set of layers based on the prediction window & context window size. Current configuration is for prediction window of 400bp and context window of 10kbp
+        """
+
 #         self.dropout4 = nn.Dropout(0.5)
 #         self.conv4 = nn.Conv1d(32, 16, kernel_size=1, padding='same')
 #         self.batch_norm4 = nn.BatchNorm1d(16)
@@ -359,6 +363,10 @@ class GAT_network(nn.Module):
         x = nn.functional.relu(self.conv3(x))
         x = self.batch_norm3(x)
         x = self.maxpool3(x)
+
+        """
+        Modify these set of layers based on the prediction window & context window size. Current configuration is for prediction window of 400bp and context window of 10kbp 
+        """
         
 #         x = self.dropout4(x)
 #         x = nn.functional.relu(self.conv4(x))
@@ -390,6 +398,10 @@ class GAT_network(nn.Module):
 
 
 class bimodal_network_GAT(nn.Module):
+    """
+    GAT-net/Bimodal network
+    """
+
     def __init__(self, model_params_dict, base_model):
         super().__init__()
         
