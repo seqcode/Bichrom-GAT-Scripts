@@ -122,7 +122,7 @@ To improve the generalization of the GAT model, we construct ubound (-ve) traini
 source activate bichrom
 
 Run: 
-./construct_data.sh
+    ./construct_data.sh
 ```
 
 ### Step 3 - Output 
@@ -145,7 +145,7 @@ There two networks in this approach:
    
 ```
 Run:
-./train_bichrom.sh
+    ./train_bichrom.sh
 ```
 
 ### Step 4 - Description of Bichrom-GAT's Output
@@ -190,5 +190,5 @@ chop_genome_window_size=config.window_len+config.context_window_len
 Then run the following command to predict on ChIP-seq tracks <br>
 ```
 Run:
-./predict_chip_seq_track_from_seqnet.sh
+    ./predict_chip_seq_track_from_seqnet.sh
 ```
