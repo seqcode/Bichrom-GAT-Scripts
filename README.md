@@ -1,11 +1,11 @@
-# [DOCUMETATION IS UNDER DEVELOPMENT]
+## NOTE: DOCUMENTATION IS UNDER DEVELOPMENT
 
 # Bichrom-GAT
 This is an extension to our earlier work on [Bichrom](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02218-6). We have added Graph Attention Network (GAT) to predict the TF-DNA binding using pre-existing contact matrix data. The GAT is implemented from this [papar](https://genome.cshlp.org/content/32/5/930). <br>
 
 ## Installation and Requirements 
 
-[IN DEVELOPMENT]
+Please refer to [bichrom_gat.yaml](https://github.com/seqcode/Bichrom-GAT-Scripts/blob/master/bichrom_gat.yaml)
 
 Clone and navigate to the Bichrom-GAT-Scripts/code. <br>
 ```
